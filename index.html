@@ -279,12 +279,12 @@
         </div>
     </section>
     
-  <div id="popupForm" class="popup">
+ <div id="popupForm" class="popup">
     <div class="popup-content">
         <span class="close-btn">&times;</span>
         <h2 style="font-weight: 600;">Admission Form</h2>
         <p>We will get back to you asap!</p>
-        <form id="admissionForm" action="https://api.web3forms.com/submit" method="POST">
+        <form id="admissionForm" action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="access_key" value="1a497108-a678-4b24-93cf-68a71beaa7a4">
             <input type="hidden" name="subject" value="New Admission Form Submission">
             <input type="hidden" name="from_name" value="Your Website Name">
@@ -351,6 +351,7 @@
   }
 </style>
 
+
 <script>
   document.getElementById('admissionForm').addEventListener('submit', function(event) {
     event.preventDefault();
@@ -405,6 +406,7 @@
     document.getElementById('popupForm').style.display = 'none';
   });
 </script>
+
 
     <!------------Footer------------>
      <footer class="footer" >
