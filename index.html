@@ -279,22 +279,132 @@
         </div>
     </section>
     
-    <div id="popupForm" class="popup">
-        <div class="popup-content">
-            <span class="close-btn">&times;</span>
-            <h2 style="font-weight: 600;">Admission Form</h2>
-            <p>We will get back to you asap!</p>
-            <form action="">
-                <input type="text" placeholder="First Name" required>
-                <input type="text" placeholder="Last Name" required>
-                <input type="email" placeholder="Email" required>
-                <input type="tel" placeholder="Phone" required>
-                <input type="file" placeholder="Attach Document" required>
-                <button type="submit">Send</button>
-            </form>
-            <p>You may also call us at   <a href="tel:061-521163"><i class="fas fa-phone" style="font-size: 15px;"></i> 061-521163</a></p>
-        </div>
+  <div id="popupForm" class="popup">
+    <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h2 style="font-weight: 600;">Admission Form</h2>
+        <p>We will get back to you asap!</p>
+        <form id="admissionForm" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="1a497108-a678-4b24-93cf-68a71beaa7a4">
+            <input type="hidden" name="subject" value="New Admission Form Submission">
+            <input type="hidden" name="from_name" value="Your Website Name">
+            <input type="hidden" name="to_email" value="balvidhyacontact@gmail.com">
+            
+            <!-- Honeypot field -->
+            <input type="text" name="honeypot" style="display:none" value="" tabindex="-1" autocomplete="off">
+
+            <input type="text" name="first_name" placeholder="First Name" required>
+            <input type="text" name="last_name" placeholder="Last Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="tel" name="phone" placeholder="Phone" required>
+            <input type="file" name="document" placeholder="Attach Document" required>
+            <button type="submit">Send</button>
+        </form>
+        <p>You may also call us at <a href="tel:061-521163"><i class="fas fa-phone" style="font-size: 15px;"></i> 061-521163</a></p>
     </div>
+</div>
+
+<div id="formMessage" class="form-message">
+    <span id="formMessageText"></span>
+    <span id="formMessageIcon"></span>
+    <button id="closeMessageBtn" class="close-message-btn">&times;</button>
+</div>
+
+<style>
+  .form-message {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    position: relative;
+    font-size: 1rem;
+  }
+  .form-message.success {
+    color: green;
+    border: 1px solid green;
+    background-color: #e6ffee;
+  }
+  .form-message.error {
+    color: red;
+    border: 1px solid red;
+    background-color: #ffe6e6;
+  }
+  .close-message-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  .success-icon {
+    content: url('data:image/svg+xml;base64,<your_green_check_svg_base64>'); /* Add your green check icon as base64 here */
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .error-icon {
+    content: url('data:image/svg+xml;base64,<your_red_cross_svg_base64>'); /* Add your red cross icon as base64 here */
+    display: inline-block;
+    margin-right: 10px;
+  }
+</style>
+
+<script>
+  document.getElementById('admissionForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const formMessage = document.getElementById('formMessage');
+    const formMessageText = document.getElementById('formMessageText');
+    const formMessageIcon = document.getElementById('formMessageIcon');
+    
+    // HTML5 validation check
+    if (!form.checkValidity()) {
+      formMessage.style.display = 'block';
+      formMessage.className = 'form-message error';
+      formMessageIcon.className = 'error-icon';
+      formMessageText.innerHTML = 'Please fill out all required fields correctly.';
+      return;
+    }
+
+    const formData = new FormData(form);
+    
+    fetch(form.action, {
+      method: form.method,
+      body: formData,
+      headers: {
+        'Accept': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        formMessage.style.display = 'block';
+        formMessage.className = 'form-message success';
+        formMessageIcon.className = 'success-icon';
+        formMessageText.innerHTML = 'Your message has been sent successfully!';
+        form.reset();
+      } else {
+        return response.json().then(data => {
+          throw new Error(data.message || 'Form submission failed');
+        });
+      }
+    }).catch(error => {
+      formMessage.style.display = 'block';
+      formMessage.className = 'form-message error';
+      formMessageIcon.className = 'error-icon';
+      formMessageText.innerHTML = error.message;
+    });
+  });
+
+  document.getElementById('closeMessageBtn').addEventListener('click', function() {
+    document.getElementById('formMessage').style.display = 'none';
+  });
+
+  document.querySelector('.close-btn').addEventListener('click', function() {
+    document.getElementById('popupForm').style.display = 'none';
+  });
+</script>
 
     <!------------Footer------------>
      <footer class="footer" >
