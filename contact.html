@@ -99,10 +99,13 @@
 
     <button type="submit" class="contact-btn">Send</button>
   </form>
-  <div id="formMessage" class="form-message"></div>
+  <div id="formMessage" class="form-message">
+    <span id="formMessageText"></span>
+    <span id="formMessageIcon"></span>
+    <button id="closeMessageBtn" class="close-message-btn">&times;</button>
+  </div>
 </div>
 
-<!-- CSS for Notification Message -->
 <style>
   .form-message {
     display: none;
@@ -110,30 +113,55 @@
     padding: 10px;
     border-radius: 5px;
     text-align: center;
+    position: relative;
+    font-size: 1rem;
   }
   .form-message.success {
     color: green;
     border: 1px solid green;
+    background-color: #e6ffee;
   }
   .form-message.error {
     color: red;
     border: 1px solid red;
+    background-color: #ffe6e6;
+  }
+  .close-message-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  .success-icon {
+    content: url('data:image/svg+xml;base64,<your_green_check_svg_base64>'); /* Add your green check icon as base64 here */
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .error-icon {
+    content: url('data:image/svg+xml;base64,<your_red_cross_svg_base64>'); /* Add your red cross icon as base64 here */
+    display: inline-block;
+    margin-right: 10px;
   }
 </style>
 
-<!-- JavaScript to Handle Form Submission and Validation -->
 <script>
   document.getElementById('contactForm').addEventListener('submit', function(event) {
     event.preventDefault();
     
     const form = event.target;
     const formMessage = document.getElementById('formMessage');
-
+    const formMessageText = document.getElementById('formMessageText');
+    const formMessageIcon = document.getElementById('formMessageIcon');
+    
     // HTML5 validation check
     if (!form.checkValidity()) {
       formMessage.style.display = 'block';
       formMessage.className = 'form-message error';
-      formMessage.innerHTML = 'Please fill out all required fields correctly.';
+      formMessageIcon.className = 'error-icon';
+      formMessageText.innerHTML = 'Please fill out all required fields correctly.';
       return;
     }
 
@@ -149,7 +177,8 @@
       if (response.ok) {
         formMessage.style.display = 'block';
         formMessage.className = 'form-message success';
-        formMessage.innerHTML = 'Your message has been sent successfully!';
+        formMessageIcon.className = 'success-icon';
+        formMessageText.innerHTML = 'Your message has been sent successfully!';
         form.reset();
       } else {
         return response.json().then(data => {
@@ -159,12 +188,16 @@
     }).catch(error => {
       formMessage.style.display = 'block';
       formMessage.className = 'form-message error';
-      formMessage.innerHTML = error.message;
+      formMessageIcon.className = 'error-icon';
+      formMessageText.innerHTML = error.message;
     });
   });
-</script>
 
-    </div>   
+  document.getElementById('closeMessageBtn').addEventListener('click', function() {
+    document.getElementById('formMessage').style.display = 'none';
+  });
+</script>
+    </div> 
   </section>
 
       
