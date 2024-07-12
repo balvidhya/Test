@@ -352,7 +352,7 @@
 </style>
 
 <script>
-    document.getElementById('admissionForm').addEventListener('submit', function(event) {
+    document.getElementById('admissionForm').addEventListener('submit', async function(event) {
         event.preventDefault();
         
         const form = event.target;
@@ -371,13 +371,15 @@
 
         const formData = new FormData(form);
         
-        fetch(form.action, {
-            method: form.method,
-            body: formData,
-            headers: {
-                'Accept': 'application/json'
-            }
-        }).then(response => {
+        try {
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
             if (response.ok) {
                 formMessage.style.display = 'block';
                 formMessage.className = 'form-message success';
@@ -385,16 +387,15 @@
                 formMessageText.innerHTML = 'Your message has been sent successfully!';
                 form.reset();
             } else {
-                return response.json().then(data => {
-                    throw new Error(data.message || 'Form submission failed');
-                });
+                const data = await response.json();
+                throw new Error(data.message || 'Form submission failed');
             }
-        }).catch(error => {
+        } catch (error) {
             formMessage.style.display = 'block';
             formMessage.className = 'form-message error';
             formMessageIcon.className = 'error-icon';
             formMessageText.innerHTML = error.message;
-        });
+        }
     });
 
     document.getElementById('closeMessageBtn').addEventListener('click', function() {
@@ -405,6 +406,7 @@
         document.getElementById('popupForm').style.display = 'none';
     });
 </script>
+
 
 
     <!------------Footer------------>
