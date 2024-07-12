@@ -304,6 +304,31 @@
     </div>
 </div>
 
+<div id="popupForm" class="popup">
+    <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h2 style="font-weight: 600;">Admission Form</h2>
+        <p>We will get back to you asap!</p>
+        <form id="admissionForm" action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="access_key" value="1a497108-a678-4b24-93cf-68a71beaa7a4">
+            <input type="hidden" name="subject" value="New Admission Form Submission">
+            <input type="hidden" name="from_name" value="Your Website Name">
+            <input type="hidden" name="to_email" value="balvidhyacontact@gmail.com">
+            
+            <!-- Honeypot field -->
+            <input type="text" name="honeypot" style="display:none" value="" tabindex="-1" autocomplete="off">
+
+            <input type="text" name="first_name" placeholder="First Name" required>
+            <input type="text" name="last_name" placeholder="Last Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="tel" name="phone" placeholder="Phone" required>
+            <input type="file" name="document" placeholder="Attach Document" required>
+            <button type="submit">Send</button>
+        </form>
+        <p>You may also call us at <a href="tel:061-521163"><i class="fas fa-phone" style="font-size: 15px;"></i> 061-521163</a></p>
+    </div>
+</div>
+
 <div id="formMessage" class="form-message">
     <span id="formMessageText"></span>
     <span id="formMessageIcon"></span>
@@ -360,8 +385,11 @@
         const formMessageText = document.getElementById('formMessageText');
         const formMessageIcon = document.getElementById('formMessageIcon');
         
+        console.log("Form submit event triggered");
+
         // HTML5 validation check
         if (!form.checkValidity()) {
+            console.error("Form validation failed");
             formMessage.style.display = 'block';
             formMessage.className = 'form-message error';
             formMessageIcon.className = 'error-icon';
@@ -369,8 +397,11 @@
             return;
         }
 
+        console.log("Form validation passed");
+
         const formData = new FormData(form);
-        
+        console.log("FormData created", formData);
+
         try {
             const response = await fetch(form.action, {
                 method: form.method,
@@ -380,7 +411,10 @@
                 }
             });
 
+            console.log("Fetch response received", response);
+
             if (response.ok) {
+                console.log("Form submission successful");
                 formMessage.style.display = 'block';
                 formMessage.className = 'form-message success';
                 formMessageIcon.className = 'success-icon';
@@ -388,9 +422,11 @@
                 form.reset();
             } else {
                 const data = await response.json();
+                console.error("Form submission failed with response data", data);
                 throw new Error(data.message || 'Form submission failed');
             }
         } catch (error) {
+            console.error("Error during form submission", error);
             formMessage.style.display = 'block';
             formMessage.className = 'form-message error';
             formMessageIcon.className = 'error-icon';
@@ -399,13 +435,16 @@
     });
 
     document.getElementById('closeMessageBtn').addEventListener('click', function() {
+        console.log("Close message button clicked");
         document.getElementById('formMessage').style.display = 'none';
     });
 
     document.querySelector('.close-btn').addEventListener('click', function() {
+        console.log("Popup close button clicked");
         document.getElementById('popupForm').style.display = 'none';
     });
 </script>
+ 
 
 
 
